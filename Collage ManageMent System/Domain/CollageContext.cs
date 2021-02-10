@@ -21,9 +21,10 @@ namespace Collage_ManageMent_System.Domain
                 .HasOne<Teacher>(s => s.Teacher)
                 .WithMany(g => g.TeacherCourses);
 
-            modelBuilder.Entity<StudentCourse>().HasKey(sc => new { sc.StudentId, sc.CourseId });
+
 
             #region many to many relationship for student and course
+            modelBuilder.Entity<StudentCourse>().HasKey(sc => new { sc.StudentId, sc.CourseId });
             // one to many relationship for student and studentCourses
             modelBuilder.Entity<StudentCourse>()
                 .HasOne<Student>(sc => sc.Student)
@@ -41,5 +42,6 @@ namespace Collage_ManageMent_System.Domain
         public DbSet<Student> Students { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Course> Courses { get; set; }
+       public DbSet<StudentCourse> StudentCourse { get; set; }
     }
 }

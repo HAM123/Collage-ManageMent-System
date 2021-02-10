@@ -1,0 +1,57 @@
+﻿@model Collage_ManageMent_System.Domain.ViewModels.StudentViewModels.StudentRegister
+
+ 
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddNewCourse</title>
+</head>
+<body>
+ 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                teacher
+            </th>
+            <th>
+                Action
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.UnRegisteredCourses) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Teacher.Name)
+            </td>
+            <td>
+                <form asp-controller="StudentRegister" asp-action="AddCourse" method="post">
+                    <button type="submit">ADD</button>
+                    <input type="hidden" name="StudentId" value="@Model.student.Id" />
+                    <input type="hidden" name="CourseId" value="@item.Id" />
+                </form>
+                 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>

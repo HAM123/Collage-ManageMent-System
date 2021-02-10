@@ -6,34 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Collage_ManageMent_System.Domain;
+using Collage_ManageMent_System.Interfaces;
 
 namespace Collage_ManageMent_System.Controllers
 {
     public class CoursesController : Controller
     {
-        private readonly CollageContext _context;
+     
+        private readonly ICourseBusiness courseBusiness;
 
-        public CoursesController(CollageContext context)
+        public CoursesController(ICourseBusiness courseBusiness)
         {
-            _context = context;
+             
+            this.courseBusiness = courseBusiness;
         }
 
         // GET: Courses
         public  IActionResult  Index()
         {
-            return View(  _context.Courses.ToList());
+            return View( courseBusiness.GetAll());
         }
 
         // GET: Courses/Details/5
-        public IActionResult  Details(Guid? id)
+        public IActionResult  Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var course =   _context.Courses
-                .FirstOrDefault (m => m.Id == id);
+            var course = courseBusiness.GetByID(id.GetValueOrDefault());
             if (course == null)
             {
                 return NotFound();
@@ -53,27 +55,26 @@ namespace Collage_ManageMent_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  IActionResult  Create([Bind("Id,Name,Description")] Course course)
+        public  IActionResult  Create(  Course course)
         {
             if (ModelState.IsValid)
             {
-                course.Id = Guid.NewGuid();
-                _context.Add(course);
-                  _context.SaveChanges();
+
+                courseBusiness.Insert(course);
                 return RedirectToAction(nameof(Index));
             }
             return View(course);
         }
 
         // GET: Courses/Edit/5
-        public  IActionResult  Edit(Guid? id)
+        public  IActionResult  Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var course =   _context.Courses.Find (id);
+            var course =   courseBusiness.GetByID( id.GetValueOrDefault());
             if (course == null)
             {
                 return NotFound();
@@ -81,12 +82,10 @@ namespace Collage_ManageMent_System.Controllers
             return View(course);
         }
 
-        // POST: Courses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Guid id, [Bind("Id,Name,Description")] Course course)
+        public IActionResult Edit(int id,   Course course)
         {
             if (id != course.Id)
             {
@@ -95,37 +94,23 @@ namespace Collage_ManageMent_System.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(course);
-                      _context.SaveChanges ();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CourseExists(course.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                
+                    courseBusiness.Update(course);
+                
+                    return RedirectToAction(nameof(Index));
             }
             return View(course);
         }
 
         // GET: Courses/Delete/5
-        public  IActionResult  Delete(Guid? id)
+        public  IActionResult  Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var course =   _context.Courses
-                .FirstOrDefault (m => m.Id == id);
+            var course = courseBusiness.GetByID(id.GetValueOrDefault());
             if (course == null)
             {
                 return NotFound();
@@ -137,17 +122,13 @@ namespace Collage_ManageMent_System.Controllers
         // POST: Courses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public  IActionResult DeleteConfirmed(Guid id)
+        public  IActionResult DeleteConfirmed(int id)
         {
-            var course =   _context.Courses.Find (id);
-            _context.Courses.Remove(course);
-              _context.SaveChanges ();
+           
+            courseBusiness.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CourseExists(Guid id)
-        {
-            return _context.Courses.Any(e => e.Id == id);
-        }
+         
     }
 }

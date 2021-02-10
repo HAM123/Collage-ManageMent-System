@@ -7,7 +7,7 @@ namespace Collage_ManageMent_System.Domain
 {
     public class Course
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public String Name { get; set; }
         public String Description { get; set; }
          public IList<StudentCourse> StudentCourses { get; set; }

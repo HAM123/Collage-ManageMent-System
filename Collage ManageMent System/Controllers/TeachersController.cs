@@ -6,34 +6,34 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Collage_ManageMent_System.Domain;
+using Collage_ManageMent_System.Interfaces;
 
 namespace Collage_ManageMent_System.Controllers
 {
     public class TeachersController : Controller
     {
-        private readonly CollageContext _context;
+        private readonly ITeacherBusiness teacherBusiness;
 
-        public TeachersController(CollageContext context)
+        public TeachersController(ITeacherBusiness teacherBusiness)
         {
-            _context = context;
+            this.teacherBusiness = teacherBusiness;
         }
 
         // GET: Teachers
         public IActionResult  Index()
         {
-            return View(  _context.Teachers.ToList ());
+            return View(  teacherBusiness.GetAll());
         }
 
         // GET: Teachers/Details/5
-        public  IActionResult  Details(Guid? id)
+        public  IActionResult  Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var teacher =   _context.Teachers
-                .FirstOrDefault (m => m.Id == id);
+            var teacher = teacherBusiness.GetByID(id.GetValueOrDefault());
             if (teacher == null)
             {
                 return NotFound();
@@ -48,45 +48,39 @@ namespace Collage_ManageMent_System.Controllers
             return View();
         }
 
-        // POST: Teachers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult  Create([Bind("Name,Id,Email,DateOfBrith,Gender,PhotoPath")] Teacher teacher)
+        public IActionResult  Create(  Teacher teacher)
         {
             if (ModelState.IsValid)
             {
-                teacher.Id = Guid.NewGuid();
-                _context.Add(teacher);
-                    _context.SaveChanges ();
+
+                teacherBusiness.Insert(teacher);
                 return RedirectToAction(nameof(Index));
             }
             return View(teacher);
         }
 
         // GET: Teachers/Edit/5
-        public  IActionResult  Edit(Guid? id)
+        public  IActionResult  Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var teacher =   _context.Teachers.Find(id);
+            var teacher =  teacherBusiness.GetByID(id.GetValueOrDefault());
             if (teacher == null)
             {
                 return NotFound();
             }
             return View(teacher);
         }
-
-        // POST: Teachers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  IActionResult  Edit(Guid id, [Bind("Name,Id,Email,DateOfBrith,Gender,PhotoPath")] Teacher teacher)
+        public  IActionResult  Edit(int id,  Teacher teacher)
         {
             if (id != teacher.Id)
             {
@@ -95,37 +89,25 @@ namespace Collage_ManageMent_System.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(teacher);
-                      _context.SaveChanges ();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TeacherExists(teacher.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                
+                    teacherBusiness.Update(teacher);
+                     
+               
+                 
                 return RedirectToAction(nameof(Index));
             }
             return View(teacher);
         }
 
         // GET: Teachers/Delete/5
-        public  IActionResult Delete(Guid? id)
+        public  IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var teacher = _context.Teachers
-                .FirstOrDefault (m => m.Id == id);
+            var teacher = teacherBusiness.GetByID(id.GetValueOrDefault());
             if (teacher == null)
             {
                 return NotFound();
@@ -137,17 +119,12 @@ namespace Collage_ManageMent_System.Controllers
         // POST: Teachers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public  IActionResult  DeleteConfirmed(Guid id)
+        public  IActionResult  DeleteConfirmed(int id)
         {
-            var teacher =   _context.Teachers.Find(id);
-            _context.Teachers.Remove(teacher);
-              _context.SaveChanges ();
+            teacherBusiness.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TeacherExists(Guid id)
-        {
-            return _context.Teachers.Any(e => e.Id == id);
-        }
+        
     }
 }

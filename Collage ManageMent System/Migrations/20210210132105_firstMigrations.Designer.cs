@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Collage_ManageMent_System.Migrations
 {
     [DbContext(typeof(CollageContext))]
-    [Migration("20210208154316_firstMigration")]
-    partial class firstMigration
+    [Migration("20210210132105_firstMigrations")]
+    partial class firstMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,9 +23,10 @@ namespace Collage_ManageMent_System.Migrations
 
             modelBuilder.Entity("Collage_ManageMent_System.Domain.Course", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -33,8 +34,8 @@ namespace Collage_ManageMent_System.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("TeacherId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -78,8 +79,8 @@ namespace Collage_ManageMent_System.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
 
                     b.HasKey("StudentId", "CourseId");
 
@@ -90,9 +91,10 @@ namespace Collage_ManageMent_System.Migrations
 
             modelBuilder.Entity("Collage_ManageMent_System.Domain.Teacher", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
                     b.Property<DateTime>("DateOfBrith")
                         .HasColumnType("datetime2");

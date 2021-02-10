@@ -6,22 +6,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Collage_ManageMent_System.Domain;
+using Collage_ManageMent_System.Business;
+using Collage_ManageMent_System.Interfaces;
+using Collage_ManageMent_System.Domain.ViewModels.StudentViewModels;
+using AutoMapper;
 
 namespace Collage_ManageMent_System.Controllers
 {
     public class StudentsController : Controller
     {
-        private readonly CollageContext _context;
+        private readonly IStudentBusiness Business;
+        private readonly IMapper mapper;
 
-        public StudentsController(CollageContext context)
+        public StudentsController(IStudentBusiness _Business ,IMapper mapper)
         {
-            _context = context;
+            Business = _Business;
+            this.mapper = mapper;
         }
 
         // GET: Students
         public ActionResult  Index()
         {
-            return View(_context.Students.ToList());
+            List<Student> students = Business.GetAll().ToList();
+
+           List<StudentViewModel>studentViewModels= mapper.Map<List<StudentViewModel>>(students);
+            return View(studentViewModels);
         }
 
         // GET: Students/Details/5
@@ -32,14 +41,13 @@ namespace Collage_ManageMent_System.Controllers
                 return NotFound();
             }
 
-            var student =   _context.Students
-                .FirstOrDefault(m => m.Id == id);
+            var student = Business.GetByID(int.Parse(id.ToString()));
             if (student == null)
             {
                 return NotFound();
             }
-
-            return View(student);
+            StudentViewModel studentViewModel = mapper.Map<StudentViewModel>(student);
+            return View(studentViewModel);
         }
 
         // GET: Students/Create
@@ -48,69 +56,57 @@ namespace Collage_ManageMent_System.Controllers
             return View();
         }
 
-        // POST: Students/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public    IActionResult  Create([Bind("Id,Name,Level,Email,DateOfBrith,Gender,PhotoPath")] Student student)
+        public    IActionResult  Create( StudentViewModel student)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(student);
-                  _context.SaveChanges();
+                Student s = mapper.Map<Student>(student);
+                Business.Insert(s);
+                  
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
         }
 
         // GET: Students/Edit/5
-        public  IActionResult Edit(int? id)
+        public  IActionResult Edit(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var student =   _context.Students.Find(id);
+            var student = Business.GetByID(id);
             if (student == null)
             {
                 return NotFound();
             }
-            return View(student);
+            StudentViewModel studentViewModel = mapper.Map<StudentViewModel>(student);
+            return View(studentViewModel);
         }
 
          
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  IActionResult  Edit(int id, [Bind("Id,Name,Level,Email,DateOfBrith,Gender,PhotoPath")] Student student)
+        public  IActionResult  Edit(int id, StudentViewModel studentViewModel)
         {
-            if (id != student.Id)
+            if (id != studentViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(student);
-                      _context.SaveChanges();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StudentExists(student.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                Student student = mapper.Map<Student>(studentViewModel);
+                    Business.Update(student);
+                 
+                
                 return RedirectToAction(nameof(Index));
             }
-            return View(student);
+            return View(studentViewModel);
         }
 
         // GET: Students/Delete/5
@@ -120,15 +116,14 @@ namespace Collage_ManageMent_System.Controllers
             {
                 return NotFound();
             }
-
-            var student =   _context.Students
-                .FirstOrDefault(m => m.Id == id);
+            
+            var student = Business.GetByID(id.GetValueOrDefault());
             if (student == null)
             {
                 return NotFound();
             }
-
-            return View(student);
+            StudentViewModel studentViewModel = mapper.Map<StudentViewModel>(student);
+            return View(studentViewModel);
         }
 
         // POST: Students/Delete/5
@@ -136,15 +131,11 @@ namespace Collage_ManageMent_System.Controllers
         [ValidateAntiForgeryToken]
         public  IActionResult  DeleteConfirmed(int id)
         {
-            var student =   _context.Students.Find(id);
-            _context.Students.Remove(student);
-              _context.SaveChanges ();
+            
+            Business.Delete(id);
             return RedirectToAction(nameof(Index));
         }
+       
 
-        private bool StudentExists(int id)
-        {
-            return _context.Students.Any(e => e.Id == id);
-        }
     }
 }

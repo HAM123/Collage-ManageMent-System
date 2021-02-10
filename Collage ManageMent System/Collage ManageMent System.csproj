@@ -6,11 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Business\" />
+    <Folder Include="Domain\ViewModels\CourseViewModels\" />
     <Folder Include="InfraStructure\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2">
       <PrivateAssets>all</PrivateAssets>

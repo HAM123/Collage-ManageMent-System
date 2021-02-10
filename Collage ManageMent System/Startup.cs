@@ -1,4 +1,6 @@
+using Collage_ManageMent_System.Business;
 using Collage_ManageMent_System.Domain;
+using Collage_ManageMent_System.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +28,12 @@ namespace Collage_ManageMent_System
                 Configuration["Data:DataBase:ConnectionString"]));
 
             services.AddMvc(option => option.EnableEndpointRouting = false);
+            services.AddTransient<IStudentBusiness, StudentBusiness>();
+            services.AddTransient<IStudentCourseBusiness, StudentCourseBusiness>();
+            services.AddTransient<ICourseBusiness, CourseBusiness>();
+            services.AddTransient<ITeacherBusiness, TeacherBusinesss>();
+            services.AddTransient<IStudentRegisterBusiness, StudentRegisterBusiness>();
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

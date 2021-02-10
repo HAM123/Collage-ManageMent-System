@@ -1,4 +1,4 @@
-﻿@model Collage_ManageMent_System.Domain.Student
+﻿@model Collage_ManageMent_System.Domain.ViewModels.StudentViewModels.StudentViewModel
 
 @{
     Layout = null;
@@ -45,11 +45,7 @@
                 <input asp-for="Gender" class="form-control" />
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PhotoPath" class="control-label"></label>
-                <input asp-for="PhotoPath" class="form-control" />
-                <span asp-validation-for="PhotoPath" class="text-danger"></span>
-            </div>
+             
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Collage_ManageMent_System.Migrations
 {
-    public partial class firstMigration : Migration
+    public partial class firstMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,7 +29,8 @@ namespace Collage_ManageMent_System.Migrations
                 name: "Teachers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateOfBrith = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -45,10 +46,11 @@ namespace Collage_ManageMent_System.Migrations
                 name: "Courses",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    TeacherId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -66,7 +68,7 @@ namespace Collage_ManageMent_System.Migrations
                 columns: table => new
                 {
                     StudentId = table.Column<int>(type: "int", nullable: false),
-                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CourseId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

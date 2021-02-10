@@ -1,4 +1,4 @@
-﻿@model Collage_ManageMent_System.Domain.Student
+﻿@model Collage_ManageMent_System.Domain.ViewModels.StudentViewModels.StudentViewModel
 
 @{
     Layout = null;
@@ -47,12 +47,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhotoPath)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhotoPath)
         </dd>
     </dl>
     

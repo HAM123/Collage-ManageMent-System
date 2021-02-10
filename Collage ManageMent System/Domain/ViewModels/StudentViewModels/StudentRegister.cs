@@ -7,6 +7,9 @@ namespace Collage_ManageMent_System.Domain.ViewModels.StudentViewModels
 {
     public class StudentRegister
     {
+        public Student student { get; set; }
+        public  List<Course> UnRegisteredCourses { get; set; }
+         
 
     }
 }
